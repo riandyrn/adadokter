@@ -179,7 +179,7 @@
 		<div class="modal-content">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			<h4 class="modal-title" id="myModalLabel">Dashboard Menu</h4>
+			<h3 class="modal-title" id="myModalLabel">Dashboard Menu</h3>
 		  </div>
 		  <div class="modal-body">
 			<a href="<?=$base_path;?>addImmediateAppointment" class="btn btn-block btn-primary">
@@ -187,12 +187,12 @@
 				Add Patient
 			</a>
 			
-			<a data-toggle="modal" data-target="#ModalTambahPatient" href="" class="btn btn-block btn-primary">
+			<a data-toggle="modal" data-target="#ModalTambahPatient" href="" class="btn btn-block btn-success">
 				<span class="glyphicon glyphicon-book"></span>
 				Register Patient
 			</a>
 			
-			<a href="<?=$base_path;?>addAppointment" class="btn btn-block btn-primary">
+			<a href="<?=$base_path;?>addAppointment" class="btn btn-block btn-info">
 				<span class="glyphicon glyphicon-ok"></span>
 				Add Appointment
 			</a>
