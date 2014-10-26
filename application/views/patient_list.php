@@ -14,7 +14,7 @@
 			<span class="pull-right">
 				<form action="<?=base_url();?>index.php/doctor/searchPatient" method="POST" class="col-md-7 pull-right">
 					<div class="input-group">
-						<input id="keyword" name="keyword" type="text" class="form-control" placeholder="Enter patient name here...">
+						<input style="min-width: 200px;" id="keyword" name="keyword" type="text" class="form-control" placeholder="Enter patient name here...">
 						<span class="input-group-btn">
 							<input type="submit" value="Find!" class="btn btn-info"/>
 						</span>
@@ -170,7 +170,7 @@
 					
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						<input type="submit" class="btn btn-primary" value="Add">
+						<input type="submit" class="btn btn-primary" value="Register">
 					</div>
 				</form>
 			</div>

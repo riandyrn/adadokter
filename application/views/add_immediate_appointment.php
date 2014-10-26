@@ -43,7 +43,7 @@
 						<label for="">Treatment:</label>
 						<textarea placeholder="Enter treatment description here..." name="treatment" id="" cols="30" rows="3" class="form-control"></textarea>
 					</div>
-					<input type="submit" class="btn btn-primary btn-block btn-lg" value="Add Appointment">
+					<input type="submit" class="btn btn-primary btn-block btn-lg" value="Add Patient">
 				</form>
 			</div>
 		</div>

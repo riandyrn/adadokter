@@ -4,8 +4,13 @@
 	
 	<div class="row header-container">
 		<div class="col-md-12 hidden-sm hidden-xs">
+			
 			<a href="<?=$base_path;?>addAppointment" class="btn btn-primary btn-adadokter pull-right" style="margin-top: 15px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Appointment</a>
+
+			<a data-toggle="modal" data-target="#ModalTambahPatient" href="" class="btn btn-primary btn-adadokter pull-right" style="margin-top: 15px; margin-right: 5px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Register Patient</a>
+			
 			<a href="<?=$base_path;?>addImmediateAppointment" class="btn btn-primary btn-adadokter pull-right" style="margin-top: 15px; margin-right: 5px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Patient</a>
+						
 			<h1>Hi, <?=$this->session->userdata('username');?>!</h1>
 			<h4>
 				<?php 
@@ -42,10 +47,15 @@
 		</div>
 	</div>
 	
-	<?php if($success != null) { ?>
+	<?php if($success) { ?>
 		<p class="success"><b>Success: </b> <?=$success;?></p>
 		<?php $this->session->unset_userdata('success'); ?>
 	<?php } ?>
+	
+	<?php if($error) { ?>
+		<p class="error"><b>Error: </b> <?=$error;?></p>
+		<?php $this->session->unset_userdata('error'); ?>
+	<?php } ?>	
 							
 	<div class="row">
 		<div class="col-md-12 text-center hidden-sm hidden-xs">
@@ -172,8 +182,20 @@
 			<h4 class="modal-title" id="myModalLabel">Dashboard Menu</h4>
 		  </div>
 		  <div class="modal-body">
-			<a href="<?=$base_path;?>addImmediateAppointment" class="btn btn-block btn-primary">Add Patient</a>
-			<a href="<?=$base_path;?>addAppointment" class="btn btn-block btn-success">Add Appointment</a>
+			<a href="<?=$base_path;?>addImmediateAppointment" class="btn btn-block btn-primary">
+				<span class="glyphicon glyphicon-user"></span>
+				Add Patient
+			</a>
+			
+			<a data-toggle="modal" data-target="#ModalTambahPatient" href="" class="btn btn-block btn-primary">
+				<span class="glyphicon glyphicon-book"></span>
+				Register Patient
+			</a>
+			
+			<a href="<?=$base_path;?>addAppointment" class="btn btn-block btn-primary">
+				<span class="glyphicon glyphicon-ok"></span>
+				Add Appointment
+			</a>
 		  </div>
 		</form>
 		</div>
@@ -198,5 +220,34 @@
 		</div>
 	  </div>
 	</div>
+	
+	<div id="ModalTambahPatient" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h3 class="modal-title" id="myModalLabel">Register Patient</h3>
+				</div>
+				<form action="<?=base_url();?>index.php/doctor/addPatient" method="POST">
+					<div class="modal-body">
+							<div class="form-group">
+								<label for="">Name:</label>
+								<input type="text" name="name" class="form-control" placeholder="Enter patient name here...">
+							</div>
+							<div class="form-group">
+								<label for="">Telephone Number:</label>
+								<input type="text" name="telephone_number" class="form-control" placeholder="Enter patient telephone number here...">
+							</div>
+							<input type="hidden" name="id_doctor" value="<?=$this->session->userdata('id_doctor');?>">
+					</div>
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<input type="submit" class="btn btn-primary" value="Register">
+					</div>
+				</form>
+			</div>
+	  </div>
+	</div>	
 	
 </div><!-- /.container -->

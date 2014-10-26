@@ -113,8 +113,16 @@ class Patient_model extends CI_Model
 	
 	function addPatient($data)
 	{
-		$this->db->insert('patient', $data);
-		return $this->db->insert_id();
+		$ret = null;
+		$id_doctor = $this->session->userdata('id_doctor');
+		$patient_name = $data['name'];
+		
+		if(!($this->isPatientExistByName($id_doctor, $patient_name))) {
+			$this->db->insert('patient', $data);
+			$ret = $this->db->insert_id();
+		}
+		
+		return $ret;
 	}
 	
 	function updatePatient($id_patient, $data)

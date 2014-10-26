@@ -123,7 +123,7 @@ class Doctor extends CI_Controller
 				}
 				else
 				{
-					$this->session->set_userdata('error', 'error adding patient');
+					$this->session->set_userdata('error', 'patient already exist');
 				}
 				
 				switch($mode)
@@ -511,6 +511,8 @@ class Doctor extends CI_Controller
 			$prevDate = date_format($prevDate, 'Y-m-d');
 			
 			$data['success'] = $this->session->userdata('success');
+			$data['error'] = $this->session->userdata('error');
+			
 			$data['nextDate'] = $nextDate;
 			$data['prevDate'] = $prevDate;
 			
@@ -612,8 +614,16 @@ class Doctor extends CI_Controller
 	public function addImmediateAppointment_P()
 	{
 		$this->load->model('doctor_model', 'd_m');
-		$this->d_m->addImmediateSchedule($_POST);
-		$this->session->set_userdata('success', 'Successfully add patient');
+		
+		$id_doctor = $this->session->userdata('id_doctor');
+		$name = $_POST['patient_name'];
+		
+		if($this->patient_m->isPatientExistByName($id_doctor, $name)) {
+			$this->d_m->addImmediateSchedule($_POST);
+			$this->session->set_userdata('success', 'Successfully add patient');
+		} else {
+			$this->session->set_userdata('error', 'Patient is not registered, please register patient first');
+		}
 		
 		redirect($this->base_path . 'dashboard');
 	}
