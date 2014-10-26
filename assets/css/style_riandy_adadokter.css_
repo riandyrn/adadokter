@@ -1,0 +1,198 @@
+.navbar-adadokter
+{
+	background-color: #45C1C3;
+	border-color: #3AB2B4;
+	color: #fff;
+}
+
+.navbar-adadokter a
+{
+	color: #fff;
+}
+
+img#logo_header
+{
+	margin-top: -11px;
+}
+
+/* Ini berhubungan dengan laman login */
+
+div.main-container
+{
+	position: relative;
+	/*margin-top: 70px;*/
+}
+
+div#main_form
+{
+	background-color: #44C1C3;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin-top: 20px;
+}
+
+div#main_form h3, div#main_form label
+{
+	color: #fff;
+}
+
+div#main_form > form
+{
+	padding: 0px 12px 20px 12px;
+}
+
+div#main_form > form h3
+{
+	padding-bottom: 5px;
+}
+
+div#main_form > form input, div#main_form > form btn
+{
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+}
+
+p#forgot_password_link
+{
+	margin-top: -10px;
+}
+
+p#forgot_password_link a
+{
+	color: #fff;
+}
+
+img#baloon
+{
+	margin-right: -35px;
+	margin-top: 41px;
+}
+
+span.input-group-addon
+{
+	background-color: #fff;
+}
+
+/* Ini berhubungan dengan laman dashboard */
+
+div.header-container h1
+{
+	color: #44C1C3;
+}
+
+div#search_container
+{
+	margin-top: 30px;
+}
+
+button#btn_add_patient
+{
+	margin-top: 2px;
+}
+
+div#search_container form
+{
+	padding-left: 5px;
+}
+
+.btn-adadokter
+{
+	background-color: #44C1C3;
+	border-color: #44C1C3;
+}
+
+.btn-adadokter:hover
+{
+	background-color: #3AB2B4;
+	border-color: #3AB2B4;
+}
+
+.table-adadokter th
+{
+	color: #45C1C3;
+}
+
+.modal h3, .modal label, label, .fc-header-title h2, .title
+{
+	color: #45C1C3;
+}
+
+.super-large-text
+{
+	font-size: 10em;
+}
+
+.btn-schedule-time
+{
+	padding: 0;
+}
+
+.error
+{
+	color: red;
+}
+
+.success
+{
+	color: green;
+}
+
+.custom-padding-left
+{
+	padding-left: 5px;
+}
+
+.custom-padding-right
+{
+	padding-right: 5px;
+}
+
+.btn-square
+{
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	border-radius: 1px;
+}
+
+#calendar
+{
+	height: 10px;
+}
+
+#schedule_table
+{
+	margin-top: -115px;
+}
+
+.fc-header-title
+{
+	margin-bottom: 10px;
+}
+
+.blue
+{
+	color: #3498db;
+}
+
+.navbar-toggle > .icon-bar
+{
+	background-color: #fff;
+}
+
+@media all and (max-width: 768px) {
+
+	.fc-header-title > h2
+	{
+		font-size: 19px;
+		margin-top: 5px;
+		font-weight: bolder;		
+	}
+	
+	#schedule_table
+	{
+		margin-top: 0px;
+	}
+	
+}
