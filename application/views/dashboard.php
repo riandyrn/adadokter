@@ -98,6 +98,7 @@
 										style="color: #333;"
 										data-id_appointment="<?=$appointment->id;?>"
 										data-date="<?=$appointment->schedule_date;?>"
+										data-start_time="<?=$appointment->start_time;?>"
 									>
 										<span style="font-weight: bolder;">
 											<?=$appointment->converted_time;?>

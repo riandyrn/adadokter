@@ -139,6 +139,10 @@
 				(sch_temp == null)
 			*/
 			
+			<?php if($type == 'edit') { ?>
+				unpaintAllBlocks();
+			<?php } ?>
+			
 			moveBlock(this);
 			
 		} else {
@@ -203,8 +207,8 @@
 	function moveBlock(obj)
 	{
 		unpaintBlock(sch_temp); // unpaint blok sebelumnya
-		$('#start_time').val($(this).data('time')); // isi datanya ke form
-		$('#schedule_date').val($(this).data('date')); //isi data tanggal ke form
+		$('#start_time').val($(obj).data('time')); // isi datanya ke form
+		$('#schedule_date').val($(obj).data('date')); //isi data tanggal ke form
 		sch_temp = $(obj).attr('id'); // simpan id elemen ini ke sch_temp
 		paintBlock(sch_temp); // paint blok itu
 	}			
@@ -217,6 +221,16 @@
 		*/
 		
 		$('.btn-schedule-time').prop('disabled', x);
+	}
+	
+	function unpaintAllBlocks()
+	{
+		if(!(sch_temp))
+		{
+			$('.schedule-time').parent().removeClass('paint-block');
+			$('#start_time').val(''); // isi datanya ke form
+			$('#end_time').val(''); //isi data tanggal ke form
+		}
 	}
 	
 	function paintBlock(id)

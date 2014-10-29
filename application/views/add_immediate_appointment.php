@@ -65,10 +65,8 @@
 					</div>
 					<form action="<?=base_url();?>index.php/doctor/addImmediateAppointmentNewPatient_P" method="POST">
 						<div class="modal-body">
-								<p class="error">
-									<small>
-										Patient is not registered, please register the patient first
-									</small>
+								<p>
+									Patient is not registered, please register the patient first
 								</p>
 								<div class="form-group">
 									<label for="">Name:</label>
