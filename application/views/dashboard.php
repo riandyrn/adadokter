@@ -7,7 +7,9 @@
 			
 			<a href="<?=$base_path;?>addAppointment" class="btn btn-primary btn-adadokter pull-right" style="margin-top: 15px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Appointment</a>
 
-			<a data-toggle="modal" data-target="#ModalTambahPatient" href="" class="btn btn-primary btn-adadokter pull-right" style="margin-top: 15px; margin-right: 5px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Register Patient</a>
+			<!--
+				<a data-toggle="modal" data-target="#ModalTambahPatient" href="" class="btn btn-primary btn-adadokter pull-right" style="margin-top: 15px; margin-right: 5px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Register Patient</a>
+			-->
 			
 			<a href="<?=$base_path;?>addImmediateAppointment" class="btn btn-primary btn-adadokter pull-right" style="margin-top: 15px; margin-right: 5px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Patient</a>
 						
@@ -187,10 +189,12 @@
 				Add Patient
 			</a>
 			
+			<!--
 			<a data-toggle="modal" data-target="#ModalTambahPatient" href="" class="btn btn-block btn-success">
 				<span class="glyphicon glyphicon-book"></span>
 				Register Patient
 			</a>
+			-->
 			
 			<a href="<?=$base_path;?>addAppointment" class="btn btn-block btn-info">
 				<span class="glyphicon glyphicon-ok"></span>
