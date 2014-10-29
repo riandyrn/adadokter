@@ -182,9 +182,13 @@
 														<button
 															<?php 
 																$char = array(' ', '-');
-																$id_name = str_replace($char, "_", $columnTitles[$j] . '_' . $i);
-																$id_name = str_replace(',', '', $id_name);
+																$id_name = str_replace($char, "_", $columnTitles[$j] . '_');
+																$id_name = str_replace(',', '', $id_name); 
+																$template = $id_name;
+																$id_name = $id_name . $i;
 															?>
+															data-template="<?=$template;?>"
+															data-row="<?=$i?>"
 															id="<?=$id_name;?>"
 															class="schedule-time btn btn-link btn-schedule-time" 
 															data-time="<?php

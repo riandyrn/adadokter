@@ -7,33 +7,6 @@
 	</script>
 <?php } ?>
 
-<script>
-	function checkFormHasValid()
-	{
-		var patient_name = $( '#patient_name' ).val();
-		var schedule_date = $( '#schedule_date' ).val();
-		var start_time = $( '#start_time' ).val();
-		var end_time = $( '#end_time' ).val();
-		
-		if
-		(
-			(patient_name != '') && 
-			(schedule_date != '') && 
-			(start_time != '') && 
-			(end_time != '')
-		)
-		{
-			$( '.btn_submit' ).prop('disabled', false);
-		}
-		else
-		{
-			$( '.btn_submit' ).prop('disabled', true);
-		}
-		
-		//console.log(patient_name + ' ' + schedule_date + ' ' + start_time + ' ' + end_time); 
-	}
-</script>
-
 <?php foreach($list_patient as $patient) { ?>
 	<input type="hidden" id="<?=$patient->name;?>" value="<?=$patient->telephone_number;?>">
 <?php } ?>
@@ -88,21 +61,8 @@
 			$( '#telephone_number' ).val(searchPhoneNumber(name));
 			return name;
 		}
-	});	
-	
-	var last_clicked_time;
-	var second_last_clicked_time;
-	var count_click = 0;
-	var edit = false;
-	var first_id;
-	var second_id;
-	var first_date;
-	var is_edit = false;
-		
-	<?php if($type == 'edit') { ?>
-		edit = true;
-	<?php } ?>	
-	
+	});
+
 	$(document).ready(function(){
 		/* 
 			dicek, kalo misalkan start sm end 
@@ -131,124 +91,142 @@
 		return $('td').find("[data-time='" + val_time + "']").filter("[data-date='" + date + "']").attr('id');
 	}
 	
-	//console.log($('td').find("[data-date='Sat, 11-Oct-14']").filter("[data-time='11:30']").attr('id'));
-	
 	$( '#patient_name' ).change(function() {
 		checkFormHasValid();
 	});
+</script>
+
+<script>
+	function checkFormHasValid()
+	{
+		var patient_name = $( '#patient_name' ).val();
+		var schedule_date = $( '#schedule_date' ).val();
+		var start_time = $( '#start_time' ).val();
+		var end_time = $( '#end_time' ).val();
+		
+		if
+		(
+			(patient_name != '') && 
+			(schedule_date != '') && 
+			(start_time != '') && 
+			(end_time != '')
+		)
+		{
+			$( '.btn_submit' ).prop('disabled', false);
+		}
+		else
+		{
+			$( '.btn_submit' ).prop('disabled', true);
+		}
+		
+	}
+
+	var sch_temp = null;
 	
 	$( '.schedule-time' ).click(function(){
-		var selected_date = $(this).data('date');
-		var selected_time = $(this).data('time');
 
-		
-		if((selected_date != $( '#schedule_date' ).val()) || (edit == true)) 
-		{
-			count_click = 0;
-			//alert('hello world!' +  selected_date + selected_time);
-			$( '#schedule_date' ).val(selected_date);
-			$( '#start_time' ).val(selected_time);
-			$( '#end_time' ).val('');
-			
-			if(first_id)
-			{
-				unpaintBlocks(first_id, first_id);
-			}
-			
-			if(first_id && second_id)
-			{
-				unpaintBlocks(first_id, second_id);
-				first_id = null;
-				second_id = null;
-			}
-			
-			first_id = $(this).attr('id');
-			//console.log(first_id);
-			
-			$( '.schedule-time' ).prop('disabled', false);
-			
-			
-			count_click++;
-			last_clicked_time = this;
-			
-			<?php if($type == 'edit') { ?>
-				edit = false;
-			<?php } ?>
-			
-			first_date = $(this).data('date');
-		}
-		else
-		{
-			count_click++;
-			$( '#end_time' ).val(selected_time);
-			
-			if(count_click > 2)
-			{
-				$(last_clicked_time).prop('disabled', false);
-				//$(last_clicked_time).parent().css('background-color', 'white');
-				$(last_clicked_time).parent().removeClass('paint-block');
-			}
-			
-			last_clicked_time = this;
-			second_id = $(this).attr('id');
-			//console.log('second_id: ' + second_id);
-		}
-
-		console.log(first_id);
-		console.log(second_id);
-		
 		/*
-			blok ini untuk menanggulangi kalau si
-			user klik di second-nya di waktu yang
-			lebih kecil dr first_date
+			ada 3 kondisi yg bisa kudu di observe:
+			- case normal
+			- case pindah tanggal
+			- case row lebih rendah
 		*/
 		
-		if(checkFirstIdLessThanSecondId(first_id, second_id))
-		{
-			/*
-				ini blok kalo normal
-			*/
-			$(this).prop('disabled', true);
-			//$(this).parent().css('background-color', 'blue');
-			$(this).parent().addClass('paint-block');
+		if(!(sch_temp)) {
 			
-			if(first_id && second_id)
-			{
-				paintBlocks(first_id, second_id);
+			/*
+				normal case, kalo first time click
+				(sch_temp == null)
+			*/
+			
+			moveBlock(this);
+			
+		} else {
+			
+			/*
+				ini second click (sch_temp != null) 
+				cek dulu dia masih ada di tanggal 
+				yang sama atau udah ganti tanggal
+			*/
+			
+			tanggal_temp = $('#' + sch_temp).data('date');
+			tanggal_current = $(this).data('date');
+			
+			if(tanggal_temp == tanggal_current) {
+				
+				row_temp = $('#' + sch_temp).data('row');
+				row_current = $(this).data('row');
+				
+				if(row_temp < row_current) {
+				
+					/*
+						ini kondisi kalo normal (user 
+						milih di tanggal yang sama dan
+						row current > temp)
+					*/
+					
+					id_temp = $('#' + sch_temp).attr('id');
+					id_current = $(this).attr('id');
+					
+					paintBlocks(id_temp, id_current);
+					$('#end_time').val($(this).data('time')); //isi datanya ke form
+					disableAllScheduleButton(true);
+					
+				} else {
+					
+					/*
+						ini kondisi kalau ternyata user pilih
+						row yang lebih kecil dari row yang kita
+						pilih
+					*/
+					
+					moveBlock(this);				
+				}
+				
+			} else {
+				
+				/*
+					ini kondisi kalau ternyata di klik kedua
+					user ganti tanggal, artinya ganti start time,
+					unpaintBlock yang sebelumnya, paintBlock yang
+					baru.
+				*/
+				
+				moveBlock(this);
 			}
-		}
-		else
-		{
-			/*
-				ini blok kalau terjadi anomali
-			*/
-			paintBlocks(second_id, second_id);
-			unpaintBlocks(first_id, first_id);
-			$('#' + first_id).prop('disabled', false);
 			
-			$( '#start_time' ).val($( '#' + second_id ).data('time'));
-			$( '#end_time' ).val('');
-			
-			first_id = second_id;
-			second_id = null;
 		}
 		
 		checkFormHasValid();
 	});
 	
-	function checkFirstIdLessThanSecondId(start_id, end_id)
+	function moveBlock(obj)
 	{
-		var ret = false;
+		unpaintBlock(sch_temp); // unpaint blok sebelumnya
+		$('#start_time').val($(this).data('time')); // isi datanya ke form
+		$('#schedule_date').val($(this).data('date')); //isi data tanggal ke form
+		sch_temp = $(obj).attr('id'); // simpan id elemen ini ke sch_temp
+		paintBlock(sch_temp); // paint blok itu
+	}			
+	
+	
+	function disableAllScheduleButton(x)
+	{
+		/*
+			x: boolean
+		*/
 		
-		var start = String(start_id).substr(String(start_id).length-1, 1);
-		var end = String(end_id).substr(String(end_id).length-1, 1);
-		
-		if(start < end)
-		{
-			ret = true;
-		}
-		
-		return ret;
+		$('.btn-schedule-time').prop('disabled', x);
+	}
+	
+	function paintBlock(id)
+	{
+		paintBlocks(id, id);
+	}
+	
+	function unpaintBlock(id)
+	{
+		unpaintBlocks(id, id);
 	}
 	
 	function unpaintBlocks(start_id, end_id)
@@ -258,25 +236,15 @@
 			pake warna putih (nge-unpaint)
 		*/
 		
-		template_id = String(start_id).substr(0, String(start_id).length-1);
-		start = String(start_id).substr(String(start_id).length-1, 1);
-		end = String(end_id).substr(String(end_id).length-1, 1);
+		template_id = $('#' + start_id).data('template');
+		start = $('#' + start_id).data('row');
+		end = $('#' + end_id).data('row');
 		
 		for(i = start; i <= end; i++)
 		{
-			//$('#' + template_id + i).parent().css('background-color', 'white');
 			$('#' + template_id + i).parent().removeClass('paint-block');
-			$('#' + template_id + i).prop('disabled', false);
 		}
 		
-		/* 
-			modul tambahan utk keperluan antisipasi user click
-			time yg lbh rendah setelah click yg kedua
-		*/
-		/*for(i = 0; i <=start; i++)
-		{
-			$('#' + template_id + i).prop('disabled', false);
-		}*/
 	}
 	
 	function paintBlocks(start_id, end_id)
@@ -286,34 +254,16 @@
 			pake warna biru
 		*/
 		
-		template_id = String(start_id).substr(0, String(start_id).length-1);
-		start = String(start_id).substr(String(start_id).length-1, 1);
-		end = String(end_id).substr(String(end_id).length-1, 1);
+		template_id = $('#' + start_id).data('template');
+		start = $('#' + start_id).data('row');
+		end = $('#' + end_id).data('row');
+		
+		console.log(template_id);
 		
 		for(i = start; i <= end; i++)
 		{
-			//$('#' + template_id + i).parent().css('background-color', '#45C1C3');
 			$('#' + template_id + i).parent().addClass('paint-block');
-			
-			if(!is_edit)
-			{
-				$('#' + template_id + i).prop('disabled', true);
-			}
-
 		}
-		
-		if(is_edit)
-		{
-			is_edit = false;
-		}
-		
-		/* 
-			modul tambahan utk keperluan antisipasi user click
-			time yg lbh rendah setelah click yg kedua
-		*/
-		/*for(i = 0; i <=start; i++)
-		{
-			$('#' + template_id + i).prop('disabled', true);
-		}*/	
+	
 	}
 </script>
