@@ -1,6 +1,12 @@
 <?php $assets = base_url() . 'assets/' ?> 
 <script src="<?=$assets;?>js/bootstrap3-typeahead.min.js"></script>
 
+<?php if($error) { ?>
+	<script>
+		$('#ModalTambahPatient').modal('show');
+	</script>
+<?php } ?>
+
 <script>
 	var names = [
 		<?php foreach($list_patient as $patient) { ?>

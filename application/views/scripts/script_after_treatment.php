@@ -1,4 +1,5 @@
 <?php $base_path = base_url() . 'index.php/doctor/'; ?>
+
 <script>
 	
 $( '.confirm-trigger' ).click(function(){

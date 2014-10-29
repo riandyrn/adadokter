@@ -601,10 +601,15 @@ class Doctor extends CI_Controller
 		Fungsi untuk immediate appointment
 	*/
 	
-	public function addImmediateAppointment()
+	public function addImmediateAppointment($prev_data = null)
 	{
 		if($this->isUserLogin())
 		{
+			if($_POST)
+			{
+				$data['prev_data'] = $prev_data;
+			}
+			
 			$id_doctor = $this->session->userdata('id_doctor');
 			$data['list_patient'] = $this->patient_m->getAllPatientByDoctor($id_doctor);
 			$this->display('add_immediate_appointment', $data);
@@ -621,10 +626,39 @@ class Doctor extends CI_Controller
 		if($this->patient_m->isPatientExistByName($id_doctor, $name)) {
 			$this->d_m->addImmediateSchedule($_POST);
 			$this->session->set_userdata('success', 'Successfully add patient');
+			redirect($this->base_path . 'dashboard');
 		} else {
 			$this->session->set_userdata('error', 'Patient is not registered, please register patient first');
+			$this->addImmediateAppointment($_POST);
 		}
 		
+	}
+	
+	public function addImmediateAppointmentNewPatient_P()
+	{	
+		/*
+			prepare data utk add patient
+		*/
+		$patient = $_POST;
+		unset($patient['patient_name']);
+		unset($patient['date']);
+		unset($patient['diagnosis']);
+		unset($patient['treatment']);
+		
+		$this->patient_m->addPatient($patient);
+		
+		/*
+			prepare data utk add immediate schedule
+		*/
+		$schedule = $_POST;
+		unset($schedule['id_doctor']);
+		unset($schedule['name']);
+		unset($schedule['telephone_number']);
+		
+		$this->load->model('doctor_model', 'd_m');
+		$this->d_m->addImmediateSchedule($schedule);
+		
+		$this->session->set_userdata('success', 'Successfully add patient');
 		redirect($this->base_path . 'dashboard');
 	}
 	
