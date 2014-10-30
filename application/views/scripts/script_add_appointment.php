@@ -268,6 +268,7 @@
 		id_current = $(obj).attr('id');
 		
 		paintBlocks(id_temp, id_current);
+		$('#start_time').val($('#' + sch_temp).data('time'));
 		$('#end_time').val($(obj).data('time')); //isi datanya ke form
 		sch_temp_2 = id_current;	
 	}
