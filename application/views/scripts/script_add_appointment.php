@@ -122,6 +122,7 @@
 	}
 
 	var sch_temp = null;
+	var sch_temp_2 = null;
 	
 	$( '.schedule-time' ).click(function(){
 
@@ -132,80 +133,148 @@
 			- case row lebih rendah
 		*/
 		
-		if(!(sch_temp)) {
-			
-			/*
-				normal case, kalo first time click
-				(sch_temp == null)
+		if(!(sch_temp_2)) {
+			/* 
+				ini kondisi kalau masih first click
 			*/
-			
-			<?php if($type == 'edit') { ?>
-				unpaintAllBlocks();
-			<?php } ?>
-			
-			moveBlock(this);
-			
-		} else {
-			
-			/*
-				ini second click (sch_temp != null) 
-				cek dulu dia masih ada di tanggal 
-				yang sama atau udah ganti tanggal
-			*/
-			
-			tanggal_temp = $('#' + sch_temp).data('date');
-			tanggal_current = $(this).data('date');
-			
-			if(tanggal_temp == tanggal_current) {
+		
+			if(!(sch_temp)) {
 				
-				row_temp = $('#' + sch_temp).data('row');
-				row_current = $(this).data('row');
+				/*
+					normal case, kalo first time click
+					(sch_temp == null)
+				*/
 				
-				if(row_temp < row_current) {
+				<?php if($type == 'edit') { ?>
+					unpaintAllBlocks();
+				<?php } ?>
 				
-					/*
-						ini kondisi kalo normal (user 
-						milih di tanggal yang sama dan
-						row current > temp)
-					*/
-					
-					id_temp = $('#' + sch_temp).attr('id');
-					id_current = $(this).attr('id');
-					
-					paintBlocks(id_temp, id_current);
-					$('#end_time').val($(this).data('time')); //isi datanya ke form
-					disableAllScheduleButton(true);
-					
-				} else {
-					
-					/*
-						ini kondisi kalau ternyata user pilih
-						row yang lebih kecil dari row yang kita
-						pilih
-					*/
-					
-					moveBlock(this);				
-				}
+				moveBlock(this);
 				
 			} else {
 				
 				/*
-					ini kondisi kalau ternyata di klik kedua
-					user ganti tanggal, artinya ganti start time,
-					unpaintBlock yang sebelumnya, paintBlock yang
-					baru.
+					ini second click (sch_temp != null) 
+					cek dulu dia masih ada di tanggal 
+					yang sama atau udah ganti tanggal
 				*/
 				
-				moveBlock(this);
+				tanggal_temp = $('#' + sch_temp).data('date');
+				tanggal_current = $(this).data('date');
+				
+				if(tanggal_temp == tanggal_current) {
+					
+					row_temp = $('#' + sch_temp).data('row');
+					row_current = $(this).data('row');
+					
+					if(row_temp < row_current) {
+					
+						/*
+							ini kondisi kalo normal (user 
+							milih di tanggal yang sama dan
+							row current > temp)
+						*/
+						
+						placeSecondBlock(this);
+						//disableAllScheduleButton(true);
+						
+					} else {
+						
+						/*
+							ini kondisi kalau ternyata user pilih
+							row yang lebih kecil dari row yang kita
+							pilih
+						*/
+						
+						moveBlock(this);				
+					}
+					
+				} else {
+					
+					/*
+						ini kondisi kalau ternyata di klik kedua
+						user ganti tanggal, artinya ganti start time,
+						unpaintBlock yang sebelumnya, paintBlock yang
+						baru.
+					*/
+					
+					moveBlock(this);
+				}
+				
 			}
+		} else {
 			
+			/*
+				ini kondisi kalo udah masuk ke
+				second click
+			*/
+			
+			tanggal_tmp = $('#' + sch_temp_2).data('date');
+			tanggal_current = $(this).data('date');
+			
+			if(tanggal_tmp == tanggal_current) { 
+				
+				/*
+					ini kondisi kalo user milih
+					lagi di satu kolom
+				*/
+				
+				row_tmp = $('#' + sch_temp).data('row');
+				row_current = $(this).data('row');
+				
+				if(row_current > row_tmp) {
+					
+					/*
+						ini kondisi kalo user milih
+						row > dr first, artinya di adjust
+						ulang penggambaran bloknya
+					*/
+					
+					unpaintAllBlocks();
+					placeSecondBlock(this);
+					
+				} else {
+					
+					/*
+						ini kondisi kalo user milih
+						blok yg lebih rendah dr first
+					*/
+					
+					unpaintAllBlocks();
+					moveBlock(this);
+					
+				}
+				
+			} else {
+			
+				/*
+					ini kondisi kalo user ternyata
+					milih kolom/ganti hari
+				*/
+				
+				console.log('masuk blok ini');
+				unpaintAllBlocks();
+				moveBlock(this);
+				
+			}
 		}
 		
 		checkFormHasValid();
 	});
 	
+	function placeSecondBlock(obj)
+	{
+		id_temp = $('#' + sch_temp).attr('id');
+		id_current = $(obj).attr('id');
+		
+		paintBlocks(id_temp, id_current);
+		$('#end_time').val($(obj).data('time')); //isi datanya ke form
+		sch_temp_2 = id_current;	
+	}
+	
 	function moveBlock(obj)
 	{
+		sch_temp_2 = null;
 		unpaintBlock(sch_temp); // unpaint blok sebelumnya
 		$('#start_time').val($(obj).data('time')); // isi datanya ke form
 		$('#schedule_date').val($(obj).data('date')); //isi data tanggal ke form
@@ -225,7 +294,7 @@
 	
 	function unpaintAllBlocks()
 	{
-		if(!(sch_temp))
+		if(!(sch_temp) || ((sch_temp) && (sch_temp_2)))
 		{
 			$('.schedule-time').parent().removeClass('paint-block');
 			$('#start_time').val(''); // isi datanya ke form
