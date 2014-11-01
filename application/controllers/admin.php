@@ -88,7 +88,7 @@ class Admin extends Common_Controller
 		{
 			$id_doctor = parent::getIdCurrentUser('admin');
 			$this->gen_m->updateData(TABEL_ADMIN, $id_doctor, $_POST);
-			parent::setMessageToSession('success', 'password has been changed');
+			parent::setMessageToSession('success', 'account data has been changed');
 			redirect($this->base_path);
 		}
 	}

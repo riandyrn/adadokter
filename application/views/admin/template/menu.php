@@ -27,7 +27,7 @@
 
 			<?php if($this->session->userdata('id_admin') != null) { ?>
 				<li class="active"><a href="<?=$base_path;?>"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Doctor List</a></li>
-				<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Change Password</a></li>				
+				<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Edit Account</a></li>				
 				<li class="active"><a href="<?=$base_path;?>logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Logout</a></li>
 			<?php } ?>
 
@@ -36,7 +36,7 @@
 			
 			<?php if($this->session->userdata('id_admin') != null) { ?>
 				<li class="active"><a href="<?=$base_path;?>"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Doctor List</a></li>
-				<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Change Password</a></li>
+				<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Edit Account</a></li>
 				<li class="active"><a href="<?=$base_path;?>logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Logout</a></li>
 			<?php } ?>
 			
@@ -50,11 +50,16 @@
 	<div class="modal-content">
 	  <div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-		<h4 class="modal-title" id="myModalLabel">Change Password</h4>
+		<h4 class="modal-title" id="myModalLabel">Edit Account</h4>
 	  </div>
 	  <form action="<?=$base_path;?>changePassword_P" method="POST">
 		  <div class="modal-body">
 			<div class="form-group">
+				<label for="">Username: </label>
+				<input type="text" name="username" class="form-control" placeholder="Enter your username here" value="<?=$this->session->userdata('username_admin');?>">
+			</div>
+			<div class="form-group">
+				<label for="">Password: </label>
 				<input type="text" name="password" class="form-control" placeholder="Enter your new password here">
 			</div>
 		  </div>
