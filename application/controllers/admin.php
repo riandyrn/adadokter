@@ -81,6 +81,18 @@ class Admin extends Common_Controller
 		}
 	}
 	
+	public function changePassword_P()
+	{
+		$this->checkUserHasLogin();
+		if($_POST)
+		{
+			$id_doctor = parent::getIdCurrentUser('admin');
+			$this->gen_m->updateData(TABEL_ADMIN, $id_doctor, $_POST);
+			parent::setMessageToSession('success', 'password has been changed');
+			redirect($this->base_path);
+		}
+	}
+	
 	public function deleteDoctor($id_doctor)
 	{
 		$this->checkUserHasLogin();

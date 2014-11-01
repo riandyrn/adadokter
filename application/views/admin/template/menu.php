@@ -27,6 +27,7 @@
 
 			<?php if($this->session->userdata('id_admin') != null) { ?>
 				<li class="active"><a href="<?=$base_path;?>"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Doctor List</a></li>
+				<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Change Password</a></li>				
 				<li class="active"><a href="<?=$base_path;?>logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Logout</a></li>
 			<?php } ?>
 
@@ -35,10 +36,33 @@
 			
 			<?php if($this->session->userdata('id_admin') != null) { ?>
 				<li class="active"><a href="<?=$base_path;?>"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Doctor List</a></li>
+				<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Change Password</a></li>
 				<li class="active"><a href="<?=$base_path;?>logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Logout</a></li>
 			<?php } ?>
 			
 		</ul>	  
 	</div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<div class="modal fade" id="modalChangePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		<h4 class="modal-title" id="myModalLabel">Change Password</h4>
+	  </div>
+	  <form action="<?=$base_path;?>changePassword_P" method="POST">
+		  <div class="modal-body">
+			<div class="form-group">
+				<input type="text" name="password" class="form-control" placeholder="Enter your new password here">
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<input type="submit" class="btn btn-primary" value="Save">
+		  </div>
+	  </form>
+	</div>
   </div>
 </div>

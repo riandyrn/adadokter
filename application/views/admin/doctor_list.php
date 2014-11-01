@@ -43,7 +43,7 @@
 			  </div>
 			</div>
 			
-			<table class="table">
+			<table class="table responsive-table">
 				<thead>
 					<tr class="title">
 						<th>Username</th>
