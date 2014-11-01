@@ -103,6 +103,7 @@ class Admin extends Common_Controller
 	
 	public function logout()
 	{
+		/* damn */
 		parent::logout('admin');
 		redirect($this->base_path);
 	}
