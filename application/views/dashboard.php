@@ -155,7 +155,7 @@
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 			<h3 class="modal-title" id="myModalLabel">Treatment for <span id="name"></span></h3>
 		  </div>
-		<form action="<?=$base_path;?>addTreatment_P" method="POST">
+		<form id="form_treatment" action="<?=$base_path;?>addTreatment_P" method="POST">
 		  <div class="modal-body">
 			<div class="form-group">
 				<label for="">Diagnosis: </label>
@@ -165,12 +165,82 @@
 				<label for="">Treatment: </label>
 				<textarea placeholder="Enter treatment description here..." name="treatment" id="treatment" cols="30" rows="5" class="form-control"></textarea>
 			</div>
+			<div class="form-group">
+				<input type="checkbox" value="1" id="btn_recall_time"> Set Recall Time
+			</div>
+			<div class="row" id="recall_time">
+				<div class="col-md-4">
+					<?php
+
+						function weeks_in_month($year, $month, $start_day_of_week)
+						{
+							// Total number of days in the given month.
+							$num_of_days = date("t", mktime(0,0,0,$month,1,$year));
+
+							// Count the number of times it hits $start_day_of_week.
+							$num_of_weeks = 0;
+							for($i=1; $i<=$num_of_days; $i++)
+							{
+							  $day_of_week = date('w', mktime(0,0,0,$month,$i,$year));
+							  if($day_of_week==$start_day_of_week)
+								$num_of_weeks++;
+							}
+
+							return $num_of_weeks;
+						}
+						
+						$now = strtotime('now');
+						$year = intval(date('Y', $now));
+						$month = intval(date('m', $now));
+						
+						$numWeeks = weeks_in_month($year, $month, 1);
+					
+					?>
+					<label for="">Week:</label>
+					<select name="week" id="" class="form-control">
+						<?php for($i=1; $i<=$numWeeks; $i++) { ?>
+							<option value="<?=$i;?>"><?=$i;?></option>
+						<?php } ?>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label for="">Month:</label>
+					<select name="month" id="" class="form-control">
+						<?php for($i=1; $i<=12; $i++) { ?>
+							<option 
+								value="<?=$i;?>"
+								<?php
+									$currentMonth = intval(date('m', strtotime('now')));
+									if($currentMonth == $i) echo 'selected';
+								?>
+							>
+								<?=date('F', mktime(0, 0, 0, $i, 10)); // nama bulan ?>
+							</option>
+						<?php } ?>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label for="">Year:</label>
+					<select name="year" id="" class="form-control">
+						<?php for($i=0; $i<=2; $i++) { 
+							$currentYear = intval(date('Y', strtotime('now')));
+							$label = $currentYear + $i;
+						?>
+							<option value="<?=$label;?>">
+								<?=$label;?>
+							</option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 			<input type="hidden" name="id_patient" id="id_patient" value="">
 			<input type="hidden" name="date" id="date" value="<?=$date;?>">
-			<input class="btn btn-primary" type="submit" value="Save">
+			
+			<input id="btn_save" class="btn btn-info" type="submit" value="Save">
+			<input id="btn_save_addappointment" onclick="changeActionToIncludeRecall(1)" class="btn btn-primary" type="submit" value="Save & Add Appointment">
 		  </div>
 		</form>
 		</div>

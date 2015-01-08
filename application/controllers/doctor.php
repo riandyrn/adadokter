@@ -538,18 +538,39 @@ class Doctor extends CI_Controller
 		}
 	}
 	
-	public function addTreatment_P()
+	public function addTreatment_P($data = null)
 	{
+		$ret;
 		if($this->isUserLogin())
 		{
-			if($_POST)
+			
+			$this->load->model('doctor_model', 'd_m');
+			$id = $this->session->userdata('id_doctor');
+			
+			if($data)
 			{
-				$this->load->model('doctor_model', 'd_m');
-				$id = $this->session->userdata('id_doctor');
-				$this->d_m->savePatientTreatment($_POST);
-				redirect($this->base_path . 'dashboard');
+				unset($data['week']);
+				unset($data['month']);
+				unset($data['year']);
+					
+				// ini kali di-supply pake parameter
+				$ret = $this->d_m->savePatientTreatment($data);
+			}
+			else
+			{
+				if($_POST)
+				{
+					unset($_POST['week']);
+					unset($_POST['month']);
+					unset($_POST['year']);
+					
+					$ret = $this->d_m->savePatientTreatment($_POST);
+					redirect($this->base_path . 'dashboard');
+				}
 			}
 		}
+		
+		return $ret;
 	}
 	
 	public function changeAppointmentStatus_P()
@@ -662,6 +683,50 @@ class Doctor extends CI_Controller
 		redirect($this->base_path . 'dashboard');
 	}
 	
+	public function recallList()
+	{
+		$id_doctor = $this->session->userdata('id_doctor');
+		$data['success'] = $this->session->userdata('success');
+		$data['error'] = $this->session->userdata('error');
+		$data['list_patient'] = $this->patient_m->getAllPatientByDoctor($id_doctor);
+		$this->display('recall_list', $data);
+	}
+	
+	public function addTreatmentWithRecall_P($mode = 0)
+	{
+		switch($mode)
+		{
+			case 0:
+				$id_treatment = $this->addTreatment_P($_POST);
+				$_POST['id'] = $id_treatment;
+				$this->addRecall_P($_POST);
+				redirect($this->base_path . 'dashboard');
+				break;
+			case 1:
+				break;
+		}
+	}
+	
+	private function debug($data)
+	{
+		echo "<pre>";
+		var_dump($data);
+		echo "</pre>";	
+	}
+	
+	private function addRecall_P($param)
+	{
+		$data['id'] = $param['id'];
+		$data['id_doctor'] = $id_doctor = $this->session->userdata('id_doctor');
+		$data['id_patient'] = $param['id_patient'];
+		$data['week'] = $param['week'];
+		$data['month'] = $param['month'];
+		$data['year'] = $param['year'];
+		
+		$this->load->model('doctor_model', 'd_m');
+		return $this->d_m->savePatientRecall($data);
+	}
+
 }
 
 ?>

@@ -31,6 +31,7 @@
 		<?php if($current_page != 'login') { ?>
 			<li><a href="<?=$base_path;?>dashboard"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;Dashboard</a></li>
 			<li><a href="<?=$base_path;?>calendar"><span class="glyphicon glyphicon-calendar"></span>&nbsp;&nbsp;Calendar</a></li>
+			<li><a href="<?=base_url();?>index.php/doctor/recallList"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;Recall List</a></li>
 			<li><a href="<?=base_url();?>index.php/doctor/patientList"><span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;Patient List</a></li>
 			<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Change Password</a></li>
 			<li><a href="<?=base_url();?>index.php/doctor/logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Logout</a></li>
@@ -40,6 +41,7 @@
 		<?php if($current_page != 'login') { ?>
 			<li><a href="<?=$base_path;?>dashboard"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;Dashboard</a></li>
 			<li><a href="<?=$base_path;?>calendar"><span class="glyphicon glyphicon-calendar"></span>&nbsp;&nbsp;Calendar</a></li>
+			<li><a href="<?=base_url();?>index.php/doctor/recallList"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;Recall List</a></li>
 			<li><a href="<?=base_url();?>index.php/doctor/patientList"><span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;Patient List</a></li>
 			<li><a data-toggle="modal" data-target="#modalChangePassword" href=""><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Change Password</a></li>
 			<li><a href="<?=base_url();?>index.php/doctor/logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Logout</a></li>

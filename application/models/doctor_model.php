@@ -109,6 +109,13 @@ class Doctor_model extends CI_Model
 	function savePatientTreatment($data)
 	{
 		$this->db->insert('treatment', $data);
+		return $this->db->insert_id();
+	}
+	
+	function savePatientRecall($data)
+	{
+		$this->db->insert('recall_time', $data);
+		return $this->db->insert_id();
 	}
 	
 	function saveAppointmentStatus($data)
