@@ -11,6 +11,16 @@ class Patient_model extends CI_Model
 		return $query->result();
 	}
 	
+	function getRecallListByDoctor($id_doctor)
+	{
+		$this->db->select()->from('patient');
+		$this->db->where('patient.id_doctor', $id_doctor);
+		$this->db->join('recall_time', 'patient.id = recall_time.id_patient');
+		$query = $this->db->get();
+		
+		return $query->result();
+	}
+	
 	function searchPatient($id_doctor, $keyword)
 	{
 		$this->db->select()->from('patient');

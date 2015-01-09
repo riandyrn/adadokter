@@ -118,6 +118,18 @@ class Doctor_model extends CI_Model
 		return $this->db->insert_id();
 	}
 	
+	function updateRecallEntry($data)
+	{
+		$this->db->where('id', $data['id']);
+		$this->db->update('recall_time', $data);
+	}
+	
+	function updateRecallStatus($data)
+	{
+		$this->db->where('id', $data['id']);
+		$this->db->update('recall_time', $data);
+	}
+	
 	function saveAppointmentStatus($data)
 	{
 		$this->db->where('id', $data['id']);
@@ -157,6 +169,12 @@ class Doctor_model extends CI_Model
 		$this->load->model('schedule_model', 's_m');
 		$this->s_m->addSchedule($data_schedule, 1);
 	}	
+	
+	function deleteRecallEntry($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete('recall_time');
+	}
 }
 
 ?>

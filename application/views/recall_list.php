@@ -50,22 +50,117 @@
 				</thead>
 				<tbody>
 					
-					<?php if(isset($list_patient)) { ?>
-						<?php if(count($list_patient) > 0) { ?>
+					<?php if(isset($list_recall)) { ?>
+						<?php if(count($list_recall) > 0) { ?>
+							<?php
+							
+								function displayRecallTime($week, $month, $year)
+								{
+									echo 'Week ' . $week . ', ' . date('F', mktime(0, 0, 0, $month, 10)) . ' ' . $year;
+								}
+								
+								function getWeeks($date, $rollover)
+								{
+									$cut = substr($date, 0, 8);
+									$daylen = 86400;
+
+									$timestamp = strtotime($date);
+									$first = strtotime($cut . "00");
+									$elapsed = ($timestamp - $first) / $daylen;
+
+									$i = 1;
+									$weeks = 1;
+
+									for($i; $i<=$elapsed; $i++)
+									{
+										$dayfind = $cut . (strlen($i) < 2 ? '0' . $i : $i);
+										$daytimestamp = strtotime($dayfind);
+
+										$day = strtolower(date("l", $daytimestamp));
+
+										if($day == strtolower($rollover))  $weeks ++;
+									}
+
+									return $weeks;
+								}
+								
+							?>
 							<?php $i=1; ?>
-							<?php foreach($list_patient as $patient) { ?>
+							<?php foreach($list_recall as $recall) { ?>
 								<tr>
-									<td><a href="<?=$base_path;?>after_treatment/<?=$patient->id;?>" style="font-weight: bolder;"><?=$patient->name;?></a></td>
-									<td><?=$patient->telephone_number;?></td>
-									
-									
-									<td>Week 1, January 2015</td>
 									<td>
-										<select name="" id="">
-											<option value="0">unconfirmed</option>
-											<option value="1">confirmed</option>
-											<option value="2">canceled</option>
-										</select>
+										<a 
+											data-id="<?=$recall->id;?>"
+											data-week="<?=$recall->week;?>"
+											data-month="<?=$recall->month;?>"
+											data-year="<?=$recall->year;?>"
+											
+											class="recall-entry" 
+											href="#" 
+											style="font-weight: bolder;"
+											data-toggle="modal"
+											data-target="#modalConfirm"
+										>
+											<?=$recall->name;?>
+										</a>
+									</td>
+									<td><?=$recall->telephone_number;?></td>
+									
+									
+									<td>
+										<?php										
+											$now = strtotime('now');
+											$week = getWeeks(date('Y-m-d', strtotime('now')), "sunday");
+											$month = intval(date('m', $now));
+											$year = intval(date('Y', $now));
+											
+											if(($recall->month == $month) && ($recall->year == $year))
+											{
+												$delta = $recall->week - $week;
+												if($delta == 0)
+												{
+													echo "<span style='color: red; font-weight: bold;'>this week</span>";
+												}
+												elseif($delta == 1)
+												{
+													echo 'next week';
+												}
+												elseif($delta == -1)
+												{
+													echo 'last week';
+												}
+												else
+												{
+													displayRecallTime($recall->week, $recall->month, $recall->year);
+												}
+											}
+											else
+											{
+												displayRecallTime($recall->week, $recall->month, $recall->year);
+											}
+										?>
+									</td>
+									<td>
+										<select data-id="<?=$recall->id;?>" name="" id="" class="recall-status">
+										<option 
+											value="0"
+											<?php if($recall->status == 0) { echo 'selected'; }?>
+										>
+											unconfirmed
+										</option>
+										<option 
+											value="1"
+											<?php if($recall->status == 1) { echo 'selected'; }?>
+										>
+											confirmed
+										</option>
+										<option 
+											value="2"
+											<?php if($recall->status == 2) { echo 'selected'; }?>
+											>
+											canceled
+										</option>
+									</select>
 									</td>
 									<!--
 									<td><button id="btn_add_patient" data-toggle="modal" data-target="#ModalTambahPatient" class="btn btn-primary btn-adadokter btn-sm"><span class="glyphicon glyphicon-plus"></span></button></td>
@@ -75,7 +170,7 @@
 								<?php $i++; ?>
 							<?php } ?> <!-- end foreach -->
 						<?php } else { ?> <!--end inner if count-->
-							<h3 class="text-center">You don't have patient yet</h3>
+							<h3 class="text-center">Recall list is empty</h3>
 						<?php } ?>
 					<?php } ?> <!-- end if -->
 				</tbody>
@@ -83,49 +178,106 @@
 		</div>
 	</div>
 
-	<div id="ModalTambahPatient" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<!-- Modal -->
+	<div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-sm">
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					<h3 class="modal-title" id="myModalLabel">Register Patient</h3>
-				</div>
-				<form action="<?=base_url();?>index.php/doctor/addPatient" method="POST">
-					<div class="modal-body">
-							<div class="form-group">
-								<label for="">Name:</label>
-								<input type="text" name="name" class="form-control" placeholder="Enter patient name here...">
-							</div>
-							<div class="form-group">
-								<label for="">Telephone Number:</label>
-								<input type="text" name="telephone_number" class="form-control" placeholder="Enter patient telephone number here...">
-							</div>
-							<input type="hidden" name="id_doctor" value="<?=$this->session->userdata('id_doctor');?>">
-					</div>
-					
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						<input type="submit" class="btn btn-primary" value="Register">
-					</div>
-				</form>
-			</div>
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title" id="myModalLabel">Edit or Remove</h4>
+		  </div>
+		  <div class="modal-body">
+			Please select one option below
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			<a id="btn_edit" href="#" data-toggle="modal" data-target="#modalEdit" class="btn btn-primary">Edit</a>
+			<a id="btn_remove" href="" class="btn btn-danger">Remove</a>
+		  </div>
+		</div>
 	  </div>
 	</div>
 	
-	<div id="ModalNotYetImplemented" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<!-- Modal -->
+	<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					<h3 class="modal-title" id="myModalLabel">Feature isn't implemented yet, sorry...</h3>
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title" id="myModalLabel">Edit Recall Time</h3>
+		  </div>
+		  <form action="<?=$base_path;?>updateRecallTime_P" method="POST">
+			  <div class="modal-body">
+				
+				<div class="row" id="recall_time">
+					<div class="col-md-4">
+						<?php
+
+							function weeks_in_month($year, $month, $start_day_of_week)
+							{
+								// Total number of days in the given month.
+								$num_of_days = date("t", mktime(0,0,0,$month,1,$year));
+
+								// Count the number of times it hits $start_day_of_week.
+								$num_of_weeks = 0;
+								for($i=1; $i<=$num_of_days; $i++)
+								{
+								  $day_of_week = date('w', mktime(0,0,0,$month,$i,$year));
+								  if($day_of_week==$start_day_of_week)
+									$num_of_weeks++;
+								}
+
+								return $num_of_weeks;
+							}
+							
+							$now = strtotime('now');
+							$year = intval(date('Y', $now));
+							$month = intval(date('m', $now));
+							
+							$numWeeks = weeks_in_month($year, $month, 1);
+						
+						?>
+						<label for="">Week:</label>
+						<select name="week" id="week_edit" class="form-control">
+							<?php for($i=1; $i<=$numWeeks; $i++) { ?>
+								<option value="<?=$i;?>"><?=$i;?></option>
+							<?php } ?>
+						</select>
+					</div>
+					<div class="col-md-4">
+						<label for="">Month:</label>
+						<select name="month" id="month_edit" class="form-control">
+							<?php for($i=1; $i<=12; $i++) { ?>
+								<option value="<?=$i;?>">
+									<?=date('F', mktime(0, 0, 0, $i, 10)); // nama bulan ?>
+								</option>
+							<?php } ?>
+						</select>
+					</div>
+					<div class="col-md-4">
+						<label for="">Year:</label>
+						<select name="year" id="year_edit" class="form-control">
+							<?php for($i=0; $i<=2; $i++) { 
+								$currentYear = intval(date('Y', strtotime('now')));
+								$label = $currentYear + $i;
+							?>
+								<option value="<?=$label;?>">
+									<?=$label;?>
+								</option>
+							<?php } ?>
+						</select>
+					</div>
 				</div>
-				<div class="modal-body text-center">
-					<span class="super-large-text">:(</span>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-dismiss="modal">Well, Ok!</button>
-				</div>
-			</div>
+
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<input id="id_edit" type="hidden" name="id">
+				<input type="submit" class="btn btn-primary" value="Save changes">
+			  </div>
+		  </form>
+		</div>
 	  </div>
-	</div>
+	</div>	
+	
 </div><!-- /.container -->

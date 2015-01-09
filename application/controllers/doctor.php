@@ -44,6 +44,9 @@ class Doctor extends CI_Controller
 			case 'add_immediate_appointment':
 				$this->load->view('scripts/script_add_immediate_appointment', $data);
 				break;
+			case 'recall_list':
+				$this->load->view('scripts/script_recall_list', $data);				
+				break;
 			default:
 				break;
 		}
@@ -688,7 +691,8 @@ class Doctor extends CI_Controller
 		$id_doctor = $this->session->userdata('id_doctor');
 		$data['success'] = $this->session->userdata('success');
 		$data['error'] = $this->session->userdata('error');
-		$data['list_patient'] = $this->patient_m->getAllPatientByDoctor($id_doctor);
+		$data['list_recall'] = $this->patient_m->getRecallListByDoctor($id_doctor);
+		//$this->debug($data['list_recall']);
 		$this->display('recall_list', $data);
 	}
 	
@@ -727,6 +731,29 @@ class Doctor extends CI_Controller
 		return $this->d_m->savePatientRecall($data);
 	}
 
+	public function changeRecallStatus_P()
+	{
+		if($_POST)
+		{
+			
+			$this->load->model('doctor_model', 'd_m');
+			$this->d_m->updateRecallStatus($_POST);
+		}
+	}
+	
+	public function deleteRecallEntry_P($id)
+	{
+		$this->load->model('doctor_model', 'd_m');
+		$this->d_m->deleteRecallEntry($id);
+		redirect($this->base_path . 'recallList');
+	}
+	
+	public function updateRecallTime_P()
+	{
+		$this->load->model('doctor_model', 'd_m');
+		$this->d_m->updateRecallEntry($_POST);
+		redirect($this->base_path . 'recallList');
+	}
 }
 
 ?>
