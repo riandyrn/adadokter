@@ -1,0 +1,1 @@
+Sebenarnya untuk fitur ini, kita bisa memanfaatkan fasilitas flashdata untuk passing data id_appointment dan juga menentukan rute dari pemrosesan add appointment

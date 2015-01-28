@@ -7,11 +7,15 @@
 				Recall List&nbsp;
 			</h1>
 		</div>
+		<div class="col-md-6">
+			<button id="btn_add_patient" data-toggle="modal" data-target="#ModalTambahPatient" class="btn btn-primary btn-adadokter pull-right" style="margin-top:23px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Recall</button>
+		</div>
 	</div>
 	<br>
 	<div class="row content-container">
+				
 		<div class="col-md-12">
-
+			
 			<?php if($success != null) { ?>
 				<p class="success"><b>Success:<br></b> <?=$success;?></p>
 				<?php $this->session->unset_userdata('success'); ?>
@@ -170,7 +174,7 @@
 								<?php $i++; ?>
 							<?php } ?> <!-- end foreach -->
 						<?php } else { ?> <!--end inner if count-->
-							<h3 class="text-center">Recall list is empty</h3>
+							<!--<h3 class="text-center">Recall list is empty</h3>-->
 						<?php } ?>
 					<?php } ?> <!-- end if -->
 				</tbody>

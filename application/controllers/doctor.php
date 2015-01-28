@@ -701,12 +701,14 @@ class Doctor extends CI_Controller
 		switch($mode)
 		{
 			case 0:
+				// ini branch kalau save only
 				$id_treatment = $this->addTreatment_P($_POST);
-				$_POST['id'] = $id_treatment;
+				//$_POST['id'] = $id_treatment; // ini salah, harusnya nggak sama dengan id_treatment <!-- deleted -->
 				$this->addRecall_P($_POST);
 				redirect($this->base_path . 'dashboard');
 				break;
 			case 1:
+				// ini branch kalo save and addAppointment
 				break;
 		}
 	}
@@ -720,8 +722,7 @@ class Doctor extends CI_Controller
 	
 	private function addRecall_P($param)
 	{
-		$data['id'] = $param['id'];
-		$data['id_doctor'] = $id_doctor = $this->session->userdata('id_doctor');
+		$data['id_doctor'] = $this->session->userdata('id_doctor');
 		$data['id_patient'] = $param['id_patient'];
 		$data['week'] = $param['week'];
 		$data['month'] = $param['month'];
