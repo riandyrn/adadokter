@@ -272,8 +272,7 @@
 			<input type="hidden" name="id_patient" id="id_patient" value="">
 			<input type="hidden" name="date" id="date" value="<?=$date;?>">
 			
-			<input id="btn_save" class="btn btn-info" type="submit" value="Save">
-			<input id="btn_save_addappointment" onclick="changeActionToIncludeRecall(1)" class="btn btn-primary" type="submit" value="Save & Add Appointment">
+			<input id="btn_save" class="btn btn-primary" type="submit" value="Save & Add Appointment">
 		  </div>
 		</form>
 		</div>
