@@ -54,7 +54,13 @@
 								<div class="form-group">
 									<label for="">Patient Name:</label>
 									<input 
-										value="<?php if($patient_name) { echo $patient_name; $this->session->unset_userdata('patient_name'); } ?>" 
+										value="<?php
+											if($patient_name) { 
+												echo $patient_name; 
+												$this->session->unset_userdata('patient_name'); 
+											} else if($patient_name_flash = $this->session->flashdata('patient_name')) {
+												echo $patient_name_flash;
+											} ?>" 
 										name="patient_name" 
 										id="patient_name" 
 										placeholder="Type patient name here..." 
@@ -63,14 +69,20 @@
 										data-provide="typeahead" 
 										autocomplete="off"
 										
-										<?php if($type == 'edit') { ?>
+										<?php if(($type == 'edit') || $patient_name_flash) { ?>
 											readonly
 										<?php } ?>
 									>
 								</div>
 								<div class="form-group">
 									<label for="">Telephone Number:</label>
-									<input value="<?=$telephone_number;?>" name="" id="telephone_number" placeholder="Telephone number" type="text" class="form-control" readonly>
+									
+									<?php if($telephone_number_flash = $this->session->flashdata('telephone_number')) { ?>
+										<input value="<?=$telephone_number_flash;?>" name="" id="telephone_number" placeholder="Telephone number" type="text" class="form-control" readonly>
+									<?php } else { ?>
+										<input value="<?=$telephone_number;?>" name="" id="telephone_number" placeholder="Telephone number" type="text" class="form-control" readonly>
+									<?php } ?>
+									
 								</div>								
 								<div class="form-group">
 									<label for="">Schedule Date:</label>

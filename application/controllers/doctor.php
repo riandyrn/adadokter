@@ -519,6 +519,7 @@ class Doctor extends CI_Controller
 			$data['nextDate'] = $nextDate;
 			$data['prevDate'] = $prevDate;
 			
+			//$this->debug($data);
 			$this->display('dashboard', $data);
 		}
 	}
@@ -696,23 +697,6 @@ class Doctor extends CI_Controller
 		$this->display('recall_list', $data);
 	}
 	
-	public function addTreatmentWithRecall_P($mode = 0)
-	{
-		switch($mode)
-		{
-			case 0:
-				// ini branch kalau save only
-				$id_treatment = $this->addTreatment_P($_POST);
-				//$_POST['id'] = $id_treatment; // ini salah, harusnya nggak sama dengan id_treatment <!-- deleted -->
-				$this->addRecall_P($_POST);
-				redirect($this->base_path . 'dashboard');
-				break;
-			case 1:
-				// ini branch kalo save and addAppointment
-				break;
-		}
-	}
-	
 	private function debug($data)
 	{
 		echo "<pre>";
@@ -755,6 +739,42 @@ class Doctor extends CI_Controller
 		$this->d_m->updateRecallEntry($_POST);
 		redirect($this->base_path . 'recallList');
 	}
+	
+	public function addTreatmentWithRecall_P($mode = 0)
+	{
+		/*
+			fungsi ini terdiri dari 2 mode:
+			Mode 0: add treatment + add recall
+			Mode 1: add treatment + redirect ke addappointment
+		*/
+		
+		//prepare data POST
+		$data = array
+		(
+			'patient_name' => $_POST['patient_name'],
+			'telephone_number' => $_POST['telephone_number'] 
+		);
+		
+		unset($_POST['patient_name']);
+		unset($_POST['telephone_number']);
+			
+		switch($mode)
+		{
+			
+			case 0:
+				// ini Mode 0
+				$this->addTreatment_P($_POST);
+				$this->addRecall_P($_POST);
+				redirect($this->base_path . 'recallList');
+				break;
+			case 1:
+				// ini Mode 1
+				$this->session->set_flashdata($data);
+				$this->addTreatment_P($_POST);
+				redirect($this->base_path . 'addAppointment');
+				break;
+		}
+	}	
 }
 
 ?>

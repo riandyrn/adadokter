@@ -132,7 +132,17 @@
 									<?php if($appointment->treatment_status) { ?>
 										<span style="color: green; font-weight: bolder;"><span class="glyphicon glyphicon-ok"></span></span>
 									<?php } else { ?>
-										<a class="edit-btn" data-name="<?=$appointment->patient_name;?>" data-id_patient="<?=$appointment->id_patient;?>" data-toggle="modal" data-target="#myModal" href="#">edit</a>
+										<a 
+											class="edit-btn" 
+											data-name="<?=$appointment->patient_name;?>" 
+											data-id_patient="<?=$appointment->id_patient;?>" 
+											data-toggle="modal" 
+											data-target="#myModal" href="#"
+											data-patient_name="<?=$appointment->patient_name;?>"
+											data-telephone_number="<?=$appointment->telephone_number;?>"
+										>
+											edit
+										</a>
 									<?php } ?>
 								</td>
 							</tr>
@@ -155,7 +165,7 @@
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 			<h3 class="modal-title" id="myModalLabel">Treatment for <span id="name"></span></h3>
 		  </div>
-		<form id="form_treatment" action="<?=$base_path;?>addTreatment_P" method="POST">
+		<form id="form_treatment" action="<?=$base_path;?>addTreatmentWithRecall_P/1" method="POST">
 		  <div class="modal-body">
 			<div class="form-group">
 				<label for="">Diagnosis: </label>
@@ -228,7 +238,7 @@
 							<option 
 								value="<?=$i;?>"
 								<?php 
-									if(($i - 1) == $currentWeek) echo 'selected';
+									if(($i) == $currentWeek - 1) echo 'selected';
 								?>
 							>
 								<?=$i;?>
@@ -271,6 +281,10 @@
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 			<input type="hidden" name="id_patient" id="id_patient" value="">
 			<input type="hidden" name="date" id="date" value="<?=$date;?>">
+			
+			<!-- ini ditambahkan pada tambahan modul recall list -->
+			<input type="hidden" name="patient_name" id="patient_name" value="<?=$date;?>">
+			<input type="hidden" name="telephone_number" id="telephone_number" value="<?=$date;?>">
 			
 			<input id="btn_save" class="btn btn-primary" type="submit" value="Save & Add Appointment">
 		  </div>
