@@ -8,7 +8,7 @@
 			</h1>
 		</div>
 		<div class="col-md-6">
-			<button id="btn_add_patient" data-toggle="modal" data-target="#ModalTambahPatient" class="btn btn-primary btn-adadokter pull-right" style="margin-top:23px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Recall</button>
+			<button id="btn_add_patient" data-toggle="modal" data-target="#modal_tambah" class="btn btn-primary btn-adadokter pull-right" style="margin-top:23px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Recall</button>
 		</div>
 	</div>
 	<br>
@@ -24,7 +24,7 @@
 				<p class="error"><b>Error:<br></b> <?=$error;?></p>
 				<?php $this->session->unset_userdata('error'); ?>
 			<?php } ?>		
-		
+						
 			<table class="table table-adadokter table-hover responsive-table">
 				<thead>
 					<tr>
@@ -56,39 +56,7 @@
 					
 					<?php if(isset($list_recall)) { ?>
 						<?php if(count($list_recall) > 0) { ?>
-							<?php
 							
-								function displayRecallTime($week, $month, $year)
-								{
-									echo 'Week ' . $week . ', ' . date('F', mktime(0, 0, 0, $month, 10)) . ' ' . $year;
-								}
-								
-								function getWeeks($date, $rollover)
-								{
-									$cut = substr($date, 0, 8);
-									$daylen = 86400;
-
-									$timestamp = strtotime($date);
-									$first = strtotime($cut . "00");
-									$elapsed = ($timestamp - $first) / $daylen;
-
-									$i = 1;
-									$weeks = 1;
-
-									for($i; $i<=$elapsed; $i++)
-									{
-										$dayfind = $cut . (strlen($i) < 2 ? '0' . $i : $i);
-										$daytimestamp = strtotime($dayfind);
-
-										$day = strtolower(date("l", $daytimestamp));
-
-										if($day == strtolower($rollover))  $weeks ++;
-									}
-
-									return $weeks;
-								}
-								
-							?>
 							<?php $i=1; ?>
 							<?php foreach($list_recall as $recall) { ?>
 								<tr>
@@ -114,7 +82,7 @@
 									<td>
 										<?php										
 											$now = strtotime('now');
-											$week = getWeeks(date('Y-m-d', strtotime('now')), "sunday");
+											$week = getWeeks(date('Y-m-d', strtotime('now')), "sunday")-1;
 											$month = intval(date('m', $now));
 											$year = intval(date('Y', $now));
 											
@@ -123,7 +91,7 @@
 												$delta = $recall->week - $week;
 												if($delta == 0)
 												{
-													echo "<span style='color: red; font-weight: bold;'>this week</span>";
+													echo "<span style='color: green; font-weight: bold;'>this week</span>";
 												}
 												elseif($delta == 1)
 												{
@@ -131,7 +99,7 @@
 												}
 												elseif($delta == -1)
 												{
-													echo 'last week';
+													echo "<span style='color: red; font-weight: bold;'>last week</span>";
 												}
 												else
 												{
@@ -203,6 +171,89 @@
 	</div>
 	
 	<!-- Modal -->
+	<div class="modal fade" id="modal_tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h3 class="modal-title" id="myModalLabel">Create Recall <span id="name"></span></h3>
+		  </div>
+		<form id="form_treatment" action="<?=$base_path;?>addRecallNormal_P" method="POST">
+		  <div class="modal-body">
+			<div class="form-group">
+				<label for="">Patient Name:</label>
+				<select name="id_patient" id="id_patient" class="form-control">
+					<?php foreach($patients as $patient) { ?>
+						<option value="<?=$patient->id;?>"><?=$patient->name;?></option>
+					<?php } ?>
+				</select>
+			</div>
+			<div class="row" id="recall_time">
+				<div class="col-md-4">
+					<?php
+												
+						$now = strtotime('now');
+						$year = intval(date('Y', $now));
+						$month = intval(date('m', $now));
+						
+						$numWeeks = weeks_in_month($year, $month, 1);
+						$currentWeek = getWeeks(date('Y-m-d', strtotime('now')), "sunday");
+					
+					?>
+					<label for="">Week:</label>
+					<select name="week" id="" class="form-control">
+						<?php for($i=1; $i<=$numWeeks; $i++) { ?>
+							<option 
+								value="<?=$i;?>"
+								<?php 
+									if(($i) == $currentWeek - 1) echo 'selected';
+								?>
+							>
+								<?=$i;?>
+							</option>
+						<?php } ?>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label for="">Month:</label>
+					<select name="month" id="" class="form-control">
+						<?php for($i=1; $i<=12; $i++) { ?>
+							<option 
+								value="<?=$i;?>"
+								<?php
+									$currentMonth = intval(date('m', strtotime('now')));
+									if($currentMonth == $i) echo 'selected';
+								?>
+							>
+								<?=date('F', mktime(0, 0, 0, $i, 10)); // nama bulan ?>
+							</option>
+						<?php } ?>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label for="">Year:</label>
+					<select name="year" id="" class="form-control">
+						<?php for($i=0; $i<=2; $i++) { 
+							$currentYear = intval(date('Y', strtotime('now')));
+							$label = $currentYear + $i;
+						?>
+							<option value="<?=$label;?>">
+								<?=$label;?>
+							</option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			<input id="btn_save" class="btn btn-primary" type="submit" value="Add Recall">
+		  </div>
+		</form>
+		</div>
+	  </div>
+	</div>
+
 	<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 		<div class="modal-content">

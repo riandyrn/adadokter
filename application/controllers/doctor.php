@@ -687,16 +687,6 @@ class Doctor extends CI_Controller
 		redirect($this->base_path . 'dashboard');
 	}
 	
-	public function recallList()
-	{
-		$id_doctor = $this->session->userdata('id_doctor');
-		$data['success'] = $this->session->userdata('success');
-		$data['error'] = $this->session->userdata('error');
-		$data['list_recall'] = $this->patient_m->getRecallListByDoctor($id_doctor);
-		//$this->debug($data['list_recall']);
-		$this->display('recall_list', $data);
-	}
-	
 	private function debug($data)
 	{
 		echo "<pre>";
@@ -711,6 +701,8 @@ class Doctor extends CI_Controller
 		$data['week'] = $param['week'];
 		$data['month'] = $param['month'];
 		$data['year'] = $param['year'];
+		
+		$this->debug($data);
 		
 		$this->load->model('doctor_model', 'd_m');
 		return $this->d_m->savePatientRecall($data);
@@ -774,6 +766,23 @@ class Doctor extends CI_Controller
 				redirect($this->base_path . 'addAppointment');
 				break;
 		}
+	}
+	
+	public function addRecallNormal_P()
+	{
+		$this->addRecall_P($_POST);
+		redirect($this->base_path . 'recallList');
+	}
+	
+	public function recallList()
+	{
+		$id_doctor = $this->session->userdata('id_doctor');
+		$data['success'] = $this->session->userdata('success');
+		$data['error'] = $this->session->userdata('error');
+		$data['list_recall'] = $this->patient_m->getRecallListByDoctor($id_doctor);
+		$data['patients'] = $this->patient_m->getAllPatientByDoctor($id_doctor);
+		
+		$this->display('recall_list', $data);
 	}	
 }
 
