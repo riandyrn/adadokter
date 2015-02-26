@@ -16,6 +16,32 @@ class Patient_model extends CI_Model
 		$this->db->select()->from('patient');
 		$this->db->where('patient.id_doctor', $id_doctor);
 		$this->db->join('recall_time', 'patient.id = recall_time.id_patient');
+		
+		/*** Add +/- 2 week(s) to recallList ***/
+		$num = 2;
+		
+		$date_two_weeks_ago = date('Y-m-d', strtotime('-' . $num . ' week'));
+		$date_two_weeks_later = date('Y-m-d', strtotime('+' . $num . ' week'));
+		
+		$year_two_weeks_ago = date('Y', strtotime($date_two_weeks_ago));
+		$year_two_weeks_later = date('Y', strtotime($date_two_weeks_later));
+		
+		$month_two_weeks_ago = date('m', strtotime($date_two_weeks_ago));
+		$month_two_weeks_later = date('m', strtotime($date_two_weeks_later));
+		
+		$week_two_weeks_ago = getWeeks($date_two_weeks_ago, "sunday");
+		$week_two_weeks_later = getWeeks($date_two_weeks_later, "sunday");
+		
+		$baseline_two_weeks_ago = strtotime($year_two_weeks_ago . '-' . $month_two_weeks_ago . '-' . $week_two_weeks_ago);
+		$baseline_two_weeks_later = strtotime($year_two_weeks_later . '-' . $month_two_weeks_later . '-' . $week_two_weeks_later);
+		
+		/*** select +/- 2 week(s) from db ***/
+		$this->db->where('recall_time.baseline >=', $baseline_two_weeks_ago);
+		$this->db->where('recall_time.baseline <=', $baseline_two_weeks_later);
+		
+		/*** order ascending ***/
+		$this->db->order_by('recall_time.baseline', 'asc');
+		
 		$query = $this->db->get();
 		
 		return $query->result();

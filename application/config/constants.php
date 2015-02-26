@@ -38,6 +38,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 define('TABEL_ADMIN', 'admin');
 define('TABEL_DOKTER', 'doctor');
+define('DELTA_UNIXTIME_IN_ONE_DAY', 86400);
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

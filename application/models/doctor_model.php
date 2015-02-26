@@ -115,6 +115,7 @@ class Doctor_model extends CI_Model
 	
 	function savePatientRecall($data)
 	{
+		$data['baseline'] = strtotime($data['year'] . '-' . $data['month'] . '-' . $data['week']);
 		$this->db->insert('recall_time', $data);
 		return $this->db->insert_id();
 	}
@@ -122,6 +123,7 @@ class Doctor_model extends CI_Model
 	function updateRecallEntry($data)
 	{
 		$this->db->where('id', $data['id']);
+		$data['baseline'] = strtotime($data['year'] . '-' . $data['month'] . '-' . $data['week']);
 		$this->db->update('recall_time', $data);
 	}
 	

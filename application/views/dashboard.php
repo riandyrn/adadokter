@@ -180,57 +180,13 @@
 			</div>
 			<div class="row" id="recall_time">
 				<div class="col-md-4">
-					<?php
-
-						function weeks_in_month($year, $month, $start_day_of_week)
-						{
-							// Total number of days in the given month.
-							$num_of_days = date("t", mktime(0,0,0,$month,1,$year));
-
-							// Count the number of times it hits $start_day_of_week.
-							$num_of_weeks = 0;
-							for($i=1; $i<=$num_of_days; $i++)
-							{
-							  $day_of_week = date('w', mktime(0,0,0,$month,$i,$year));
-							  if($day_of_week==$start_day_of_week)
-								$num_of_weeks++;
-							}
-
-							return $num_of_weeks;
-						}
-						
-						function getWeeks($date, $rollover)
-						{
-							$cut = substr($date, 0, 8);
-							$daylen = 86400;
-
-							$timestamp = strtotime($date);
-							$first = strtotime($cut . "00");
-							$elapsed = ($timestamp - $first) / $daylen;
-
-							$i = 1;
-							$weeks = 1;
-
-							for($i; $i<=$elapsed; $i++)
-							{
-								$dayfind = $cut . (strlen($i) < 2 ? '0' . $i : $i);
-								$daytimestamp = strtotime($dayfind);
-
-								$day = strtolower(date("l", $daytimestamp));
-
-								if($day == strtolower($rollover))  $weeks ++;
-							}
-
-							return $weeks;
-						}
-						
+					<?php					
 						$now = strtotime('now');
 						$year = intval(date('Y', $now));
 						$month = intval(date('m', $now));
 						
 						$numWeeks = weeks_in_month($year, $month, 1);
 						$currentWeek = getWeeks(date('Y-m-d', strtotime('now')), "sunday");
-					
 					?>
 					<label for="">Week:</label>
 					<select name="week" id="" class="form-control">

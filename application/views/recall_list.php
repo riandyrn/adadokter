@@ -11,11 +11,11 @@
 			<button id="btn_add_patient" data-toggle="modal" data-target="#modal_tambah" class="btn btn-primary btn-adadokter pull-right" style="margin-top:23px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Recall</button>
 		</div>
 	</div>
+	<p><small>Recall list being displayed has range 2 weeks (2 weeks ago - 2 weeks later) from <?=date('d-M-Y', strtotime('now'));?></small></p>
 	<br>
 	<div class="row content-container">
 				
 		<div class="col-md-12">
-			
 			<?php if($success != null) { ?>
 				<p class="success"><b>Success:<br></b> <?=$success;?></p>
 				<?php $this->session->unset_userdata('success'); ?>
@@ -47,9 +47,9 @@
 							</span>
 							Status
 						</th>
-						<!--<th>
-							Appointment
-						</th>-->				
+						<th class="hidden-xs hidden-sm">
+							Add Appointment
+						</th>				
 					</tr>
 				</thead>
 				<tbody>
@@ -86,25 +86,16 @@
 											$month = intval(date('m', $now));
 											$year = intval(date('Y', $now));
 											
-											if(($recall->month == $month) && ($recall->year == $year))
+											$baseline_current = getUnixTimeWeek(date('Y-m-d', strtotime('now')));
+
+											$delta = $baseline_current - $recall->baseline;
+											if($delta == DELTA_UNIXTIME_IN_ONE_DAY)
 											{
-												$delta = $recall->week - $week;
-												if($delta == 0)
-												{
-													echo "<span style='color: green; font-weight: bold;'>this week</span>";
-												}
-												elseif($delta == 1)
-												{
-													echo 'next week';
-												}
-												elseif($delta == -1)
-												{
-													echo "<span style='color: red; font-weight: bold;'>last week</span>";
-												}
-												else
-												{
-													displayRecallTime($recall->week, $recall->month, $recall->year);
-												}
+												echo "<span style='color: green; font-weight: bold;'>this week</span>";
+											}
+											elseif($delta > DELTA_UNIXTIME_IN_ONE_DAY)
+											{
+												echo "<span style='color: red; font-weight: bold;'>has passed</span>";
 											}
 											else
 											{
@@ -134,9 +125,9 @@
 										</option>
 									</select>
 									</td>
-									<!--
-									<td><button id="btn_add_patient" data-toggle="modal" data-target="#ModalTambahPatient" class="btn btn-primary btn-adadokter btn-sm"><span class="glyphicon glyphicon-plus"></span></button></td>
-									-->
+									<td class="hidden-xs hidden-sm">
+										<a id="" href="" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-plus"></span> Appointment</a>	
+									</td>
 								</tr>
 								
 								<?php $i++; ?>
@@ -156,15 +147,12 @@
 		<div class="modal-content">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			<h4 class="modal-title" id="myModalLabel">Edit or Remove</h4>
+			<h4 class="modal-title" id="myModalLabel">Select Action</h4>
 		  </div>
 		  <div class="modal-body">
-			Please select one option below
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-			<a id="btn_edit" href="#" data-toggle="modal" data-target="#modalEdit" class="btn btn-primary">Edit</a>
-			<a id="btn_remove" href="" class="btn btn-danger">Remove</a>
+			<a id="btn_edit" href="#" data-toggle="modal" data-target="#modalEdit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-pencil"></span> Edit Recall</a>
+			<a id="btn_remove" href="" class="btn btn-danger btn-block"><span class="glyphicon glyphicon-remove"></span> Remove Recall</a>
+			<a id="" href="" class="btn btn-info btn-block hidden-md hidden-lg"><span class="glyphicon glyphicon-plus"></span> Appointment</a>
 		  </div>
 		</div>
 	  </div>
@@ -267,23 +255,6 @@
 				<div class="row" id="recall_time">
 					<div class="col-md-4">
 						<?php
-
-							function weeks_in_month($year, $month, $start_day_of_week)
-							{
-								// Total number of days in the given month.
-								$num_of_days = date("t", mktime(0,0,0,$month,1,$year));
-
-								// Count the number of times it hits $start_day_of_week.
-								$num_of_weeks = 0;
-								for($i=1; $i<=$num_of_days; $i++)
-								{
-								  $day_of_week = date('w', mktime(0,0,0,$month,$i,$year));
-								  if($day_of_week==$start_day_of_week)
-									$num_of_weeks++;
-								}
-
-								return $num_of_weeks;
-							}
 							
 							$now = strtotime('now');
 							$year = intval(date('Y', $now));
