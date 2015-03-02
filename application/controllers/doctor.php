@@ -446,7 +446,6 @@ class Doctor extends CI_Controller
 			$data['nextDate'] = $nextDate;
 			$data['prevDate'] = $prevDate;
 			
-			//$this->debug($data);
 			$this->display('dashboard', $data);
 		}
 	}

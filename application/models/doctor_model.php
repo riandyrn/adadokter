@@ -27,8 +27,8 @@ class Doctor_model extends CI_Model
 		$this->db->where('schedule.schedule_date', $date);
 		$this->db->where('schedule.id_doctor', $id_doctor);
 		$this->db->select()->from('schedule');
-		$this->db->join('appointment_status', 'appointment_status.id=schedule.id');
 		$this->db->join('patient', 'patient.name=schedule.patient_name');
+		$this->db->join('appointment_status', 'appointment_status.id=schedule.id');
 		$this->db->order_by('start_time', 'ASC');
 		$query = $this->db->get();
 		
