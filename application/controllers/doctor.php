@@ -281,26 +281,6 @@ class Doctor extends CI_Controller
 		return $data;
 	}
 	
-	public function addAppointment($base_date = '')
-	{
-		if($this->isUserLogin())
-		{	
-			$data = $this->getDataForAppointmentView($base_date);
-			
-			// data custom utk add appointment
-			$data['patient_not_exist'] = $this->retrieveDataFromSession('patient_not_exist');
-			$data['telephone_number'] = null;
-			$data['patient_name'] = $this->retrieveDataFromSession('patient_name');
-			$data['schedule_date'] = $this->retrieveDataFromSession('schedule_date');
-			$data['start_time'] = $this->retrieveDataFromSession('start_time');
-			$data['end_time'] = $this->retrieveDataFromSession('end_time');	
-
-			$data['type'] = 'add';
-			
-			$this->display('add_appointment', $data);
-		}
-	}
-	
 	public function editAppointment($id_appointment, $base_date = '')
 	{
 		if($this->isUserLogin())
@@ -389,60 +369,7 @@ class Doctor extends CI_Controller
 			}
 		}	
 	}
-	
-	public function addAppointment_P($type = 'add', $id_appointment = '', $base_date = '')
-	{
-		if($this->isUserLogin())
-		{
-			if($_POST)
-			{
-				// cek dulu patient exist atau nggak
-				$id_doctor = $this->session->userdata('id_doctor');
-				if($this->patient_m->isPatientExistByName($id_doctor, $_POST['patient_name']))
-				// kalo iya
-				{
-					if($type == 'add')
-					{
-						// pasang validasi appointment time disini
-						$this->load->model('schedule_model', 's_m');
-						if($this->s_m->checkAppointmentTimeValid($_POST))
-						{
-							$this->registerSchedule($_POST);
-						}
-						else
-						{
-							// return error
-							$this->session->set_userdata('error', 'Cannot add appointment, schedule time already reserved');
-						}
-					}
-					else
-					{
-						$this->registerSchedule($_POST, 'edit', $id_appointment);
-					}
-				}
-				else // kalo ternyata patient-nya belum ada
-				{
-					// kasih notifikasi ke user dan tampilin button ke user
-					// kirim juga post-nya
-					$this->session->set_userdata('patient_not_exist', true);
-					$this->session->set_userdata('patient_name', $_POST['patient_name']);
-					$this->session->set_userdata('schedule_date', $_POST['schedule_date']);
-					$this->session->set_userdata('start_time', $_POST['start_time']);
-					$this->session->set_userdata('end_time', $_POST['end_time']);
-				}
-				
-				if($type == 'add')
-				{
-					redirect($this->base_path . 'addAppointment');
-				}
-				else
-				{
-					redirect($this->base_path . 'editAppointment/' . $id_appointment . '/' . $base_date);
-				}
-			}
-		}
-	}
-	
+		
 	public function deleteAppointment($id, $dashboard = null)
 	{
 		if($this->isUserLogin())
@@ -783,7 +710,123 @@ class Doctor extends CI_Controller
 		$data['patients'] = $this->patient_m->getAllPatientByDoctor($id_doctor);
 		
 		$this->display('recall_list', $data);
-	}	
+	}
+	
+	public function addAppointmentRecall()
+	{
+		/*
+			Fungsi ini bertindak sebagai proxy antara
+			addAppointment dengan dengan recall.
+			
+			Fungsi ini melakukan penyimpanan id_recall
+			ke flashdata kemudian melakukan redirect
+			ke addAppointment
+		*/
+		
+		$data_recall = $_POST;
+		$this->session->set_flashdata('data_recall', $data_recall);
+		redirect($this->base_path . 'addAppointment');
+	}
+	
+	public function addAppointment($base_date = '')
+	{
+		if($this->isUserLogin())
+		{	
+			$data = $this->getDataForAppointmentView($base_date);
+			
+			// data custom utk add appointment
+			$data['patient_not_exist'] = $this->retrieveDataFromSession('patient_not_exist');
+			$data['telephone_number'] = null;
+			$data['patient_name'] = $this->retrieveDataFromSession('patient_name');
+			$data['schedule_date'] = $this->retrieveDataFromSession('schedule_date');
+			$data['start_time'] = $this->retrieveDataFromSession('start_time');
+			$data['end_time'] = $this->retrieveDataFromSession('end_time');	
+
+			$data['type'] = 'add';
+			
+			if($this->session->flashdata('data_recall'))
+			{
+				/*
+					Ini ngecek dulu kalo id_recall ada di flashdata
+					atau enggak. Kalo ada lakukan keep, biar bisa
+					diproses di bagian addAppointment_P
+				*/
+				$data_recall = $this->session->flashdata('data_recall');
+				$data['patient_name'] = $data_recall['patient_name'];
+				$data['telephone_number'] = $data_recall['telephone_number'];
+				
+				$this->session->set_flashdata('id_recall', $data_recall['id_recall']);
+			}
+			
+			$this->display('add_appointment', $data);
+		}
+	}
+	
+	public function addAppointment_P($type = 'add', $id_appointment = '', $base_date = '')
+	{
+		if($this->isUserLogin())
+		{
+			if($_POST)
+			{
+				// cek dulu patient exist atau nggak
+				$id_doctor = $this->session->userdata('id_doctor');
+				if($this->patient_m->isPatientExistByName($id_doctor, $_POST['patient_name']))
+				// kalo iya
+				{
+					if($type == 'add')
+					{
+						// pasang validasi appointment time disini
+						$this->load->model('schedule_model', 's_m');
+						if($this->s_m->checkAppointmentTimeValid($_POST))
+						{
+							$this->registerSchedule($_POST);
+						}
+						else
+						{
+							// return error
+							$this->session->set_userdata('error', 'Cannot add appointment, schedule time already reserved');
+						}
+					}
+					else
+					{
+						$this->registerSchedule($_POST, 'edit', $id_appointment);
+					}
+				}
+				else // kalo ternyata patient-nya belum ada
+				{
+					// kasih notifikasi ke user dan tampilin button ke user
+					// kirim juga post-nya
+					$this->session->set_userdata('patient_not_exist', true);
+					$this->session->set_userdata('patient_name', $_POST['patient_name']);
+					$this->session->set_userdata('schedule_date', $_POST['schedule_date']);
+					$this->session->set_userdata('start_time', $_POST['start_time']);
+					$this->session->set_userdata('end_time', $_POST['end_time']);
+				}
+				
+				if($this->session->flashdata('id_recall'))
+				{
+					/*
+						Kalo id_recall ada, artinya addAppointment
+						berasal dari recall, karena itu perlu di-delete
+					*/
+					
+					$id_recall = $this->session->flashdata('id_recall');
+					$this->load->model('doctor_model', 'd_m');
+					$this->d_m->deleteRecallEntry($id_recall); //ini untuk delete recall entry-nya
+				}
+				
+				if($type == 'add')
+				{
+					redirect($this->base_path . 'addAppointment');
+				}
+				else
+				{
+					redirect($this->base_path . 'editAppointment/' . $id_appointment . '/' . $base_date);
+				}
+			}
+		}
+	}
+	
 }
 
 ?>

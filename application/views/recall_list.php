@@ -126,7 +126,12 @@
 									</select>
 									</td>
 									<td class="hidden-xs hidden-sm">
-										<a id="" href="" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-plus"></span> Appointment</a>	
+										<form action="<?=$base_path;?>addAppointmentRecall" method="POST">
+											<input type="hidden" name="id_recall" value="<?=$recall->id;?>">
+											<input type="hidden" name="patient_name" value="<?=$recall->name;?>">
+											<input type="hidden" name="telephone_number" value="<?=$recall->telephone_number;?>">
+											<input type="submit" class="btn btn-info btn-sm" value="Add Appointment">
+										</form>
 									</td>
 								</tr>
 								
@@ -170,11 +175,15 @@
 		  <div class="modal-body">
 			<div class="form-group">
 				<label for="">Patient Name:</label>
-				<select name="id_patient" id="id_patient" class="form-control">
+				<select name="id_patient" id="patient_name" class="form-control">
 					<?php foreach($patients as $patient) { ?>
 						<option value="<?=$patient->id;?>"><?=$patient->name;?></option>
 					<?php } ?>
 				</select>
+			</div>
+			<div class="form-group">
+				<label for="">Telephone Number:</label>
+				<input id="telephone_number" class="form-control" type="text" readonly>
 			</div>
 			<div class="row" id="recall_time">
 				<div class="col-md-4">

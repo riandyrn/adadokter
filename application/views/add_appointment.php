@@ -58,7 +58,8 @@
 											if($patient_name) { 
 												echo $patient_name; 
 												$this->session->unset_userdata('patient_name'); 
-											} else if($patient_name_flash = $this->session->flashdata('patient_name')) {
+											} else if($this->session->flashdata('patient_name')) {
+												$patient_name_flash = $this->session->flashdata('patient_name');
 												echo $patient_name_flash;
 											} ?>" 
 										name="patient_name" 
@@ -69,7 +70,7 @@
 										data-provide="typeahead" 
 										autocomplete="off"
 										
-										<?php if(($type == 'edit') || $patient_name_flash) { ?>
+										<?php if(($type == 'edit') || isset($patient_name_flash) || $patient_name) { ?>
 											readonly
 										<?php } ?>
 									>
