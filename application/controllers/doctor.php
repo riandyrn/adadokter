@@ -628,7 +628,7 @@ class Doctor extends CI_Controller
 		$data['month'] = $param['month'];
 		$data['year'] = $param['year'];
 		
-		$this->debug($data);
+		//$this->debug($data);
 		
 		$this->load->model('doctor_model', 'd_m');
 		return $this->d_m->savePatientRecall($data);
