@@ -1,7 +1,69 @@
 <?php $base_path = base_url() . 'index.php/doctor/'; ?>
 <?php $assets = base_url() . 'assets/' ?> 
 
+<script src="<?=$assets;?>js/bootstrap3-typeahead.min.js"></script>
+
 <script>
+
+	var names = [
+		<?php foreach($patients as $patient) { ?>
+			'<?=$patient->name;?>', 
+		<?php } ?>
+		];
+		
+	var patient_data =
+		[
+			<?php foreach($patients as $patient) { ?>
+				{
+					id: '<?=$patient->id;?>',
+					name: '<?=$patient->name;?>',
+					phone: '<?=$patient->telephone_number;?>'
+				},
+			<?php } ?>
+		];
+	
+	function searchPhoneNumberAndId(name)
+	{
+		found = false;
+		i = 0;
+		ret = null;
+		
+		while(!found && (i < patient_data.length))
+		{
+			if(patient_data[i].name == name)
+			{
+				found = true;
+			}
+			else
+			{
+				i++;
+			}
+		}
+		
+		if(found)
+		{
+			ret = patient_data[i];
+		}
+		
+		return ret;
+	}
+	
+	$('#patient_name').typeahead({
+		source: names,
+		updater: function(name)
+		{
+			var tmp = searchPhoneNumberAndId(name);
+			var id = tmp.id;
+			var telephone_number = tmp.phone;
+			
+			console.log(telephone_number);
+			$( '#telephone_number' ).val(telephone_number);
+			$( '#id_patient' ).val(id);
+			
+			return name;
+		}
+	});
+	
 	/*** Ini script untuk ngerubah status aja ***/
 	$( '.recall-status' ).change(function(){
 		$.post(
@@ -33,7 +95,7 @@
 		
 	});
 	
-	var arr_patient =
+	/*var arr_patient =
 	[
 		<?php foreach($patients as $patient) { ?>
 			['<?=$patient->id;?>','<?=$patient->telephone_number;?>'],
@@ -44,7 +106,7 @@
 	{
 		/*
 			Asumsi elemen pasti ditemukan
-		*/
+		*
 		
 		var i = 0;
 		var found = false;
@@ -74,5 +136,5 @@
 		fillTelephoneNumber();
 	});
 	
-	fillTelephoneNumber();
+	fillTelephoneNumber();*/
 </script>

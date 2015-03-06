@@ -175,15 +175,12 @@
 		  <div class="modal-body">
 			<div class="form-group">
 				<label for="">Patient Name:</label>
-				<select name="id_patient" id="patient_name" class="form-control">
-					<?php foreach($patients as $patient) { ?>
-						<option value="<?=$patient->id;?>"><?=$patient->name;?></option>
-					<?php } ?>
-				</select>
+				<input type="text" name="" id="patient_name" class="form-control" placeholder="Enter patient name here..." autocomplete="off">
+				<input type="hidden" name="id_patient" id="id_patient" value="">
 			</div>
 			<div class="form-group">
 				<label for="">Telephone Number:</label>
-				<input id="telephone_number" class="form-control" type="text" readonly>
+				<input id="telephone_number" class="form-control" type="text" placeholder="Telephone Number" readonly>
 			</div>
 			<div class="row" id="recall_time">
 				<div class="col-md-4">
