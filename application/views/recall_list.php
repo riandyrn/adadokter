@@ -11,7 +11,10 @@
 			<button id="btn_add_patient" data-toggle="modal" data-target="#modal_tambah" class="btn btn-primary btn-adadokter pull-right" style="margin-top:23px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add Recall</button>
 		</div>
 	</div>
+	
+	<!--
 	<p><small>Recall list being displayed has range 2 weeks (2 weeks ago - 2 weeks later) from <?=date('d-M-Y', strtotime('now'));?></small></p>
+	-->
 	<br>
 	<div class="row content-container">
 				
@@ -157,7 +160,15 @@
 		  <div class="modal-body">
 			<a id="btn_edit" href="#" data-toggle="modal" data-target="#modalEdit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-pencil"></span> Edit Recall</a>
 			<a id="btn_remove" href="" class="btn btn-danger btn-block"><span class="glyphicon glyphicon-remove"></span> Remove Recall</a>
+			<!--
 			<a id="" href="" class="btn btn-info btn-block hidden-md hidden-lg"><span class="glyphicon glyphicon-plus"></span> Appointment</a>
+			-->
+			<form action="<?=$base_path;?>addAppointmentRecall" method="POST">
+				<input type="hidden" name="id_recall" value="<?=$recall->id;?>">
+				<input type="hidden" name="patient_name" value="<?=$recall->name;?>">
+				<input type="hidden" name="telephone_number" value="<?=$recall->telephone_number;?>">
+				<input type="submit" class="btn btn-info btn-block hidden-md hidden-lg" value="Add Appointment" style="margin-top: 5px;">
+			</form>
 		  </div>
 		</div>
 	  </div>
