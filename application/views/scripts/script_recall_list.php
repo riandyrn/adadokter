@@ -95,9 +95,9 @@
 		$( '#month_edit' ).val(month);
 		$( '#year_edit' ).val(year);
 
-		$( '#id_recall' ).val(id);
-		$( '#patient_name' ).val(patient_name);
-		$( '#telephone_number' ).val(telephone_number);
+		$( '#id_recall_appointment' ).val(id);
+		$( '#patient_name_appointment' ).val(patient_name);
+		$( '#telephone_number_appointment' ).val(telephone_number);
 		
 	});
 	

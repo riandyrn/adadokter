@@ -166,9 +166,9 @@
 			<a id="" href="" class="btn btn-info btn-block hidden-md hidden-lg"><span class="glyphicon glyphicon-plus"></span> Appointment</a>
 			-->
 			<form action="<?=$base_path;?>addAppointmentRecall" method="POST">
-				<input type="hidden" name="id_recall" id="id_recall" value="<?=$recall->id;?>">
-				<input type="hidden" name="patient_name" id="patient_name" value="<?=$recall->name;?>">
-				<input type="hidden" name="telephone_number" id="telephone_number" value="<?=$recall->telephone_number;?>">
+				<input type="hidden" name="id_recall" id="id_recall_appointment" value="<?=$recall->id;?>">
+				<input type="hidden" name="patient_name" id="patient_name_appointment" value="<?=$recall->name;?>">
+				<input type="hidden" name="telephone_number" id="telephone_number_appointment" value="<?=$recall->telephone_number;?>">
 				<input type="submit" class="btn btn-info btn-block hidden-md hidden-lg" value="Add Appointment" style="margin-top: 5px;">
 			</form>
 		  </div>
