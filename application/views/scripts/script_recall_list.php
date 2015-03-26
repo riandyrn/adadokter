@@ -79,6 +79,8 @@
 	/*** Ini script untuk satuan data entry ***/
 	$( '.recall-entry' ).click(function(){
 		id = $(this).data('id');
+		patient_name = $(this).data('patient_name');
+		telephone_number = $(this).data('telephone_number');
 		
 		//untuk set value href hapus
 		$( '#btn_remove' ).attr('href', '<?=$base_path;?>deleteRecallEntry_P/' + id);
@@ -92,6 +94,10 @@
 		$( '#week_edit' ).val(week);
 		$( '#month_edit' ).val(month);
 		$( '#year_edit' ).val(year);
+
+		$( '#id_recall' ).val(id);
+		$( '#patient_name' ).val(patient_name);
+		$( '#telephone_number' ).val(telephone_number);
 		
 	});
 	
