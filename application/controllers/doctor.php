@@ -135,7 +135,16 @@ class Doctor extends CI_Controller
 						$_POST['patient_name'] = $_POST['name'];
 						unset($_POST['name']);
 						unset($_POST['telephone_number']);
-						$this->registerSchedule($_POST);
+						$this->load->model('schedule_model', 's_m');
+						if($this->s_m->checkAppointmentTimeValid($_POST))
+						{
+							$this->registerSchedule($_POST);
+						}
+						else 
+						{
+							$this->session->set_userdata('error', 'failed to add appointment');
+						}
+						
 						redirect(base_url() . 'index.php/doctor/addAppointment');
 						break;
 					default:
